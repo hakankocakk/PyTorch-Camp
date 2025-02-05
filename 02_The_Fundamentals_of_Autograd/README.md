@@ -69,7 +69,96 @@ plt.show()
 #### Çıktı:
 <img src="assets/images/sin_graph.png" alt="Sinüs Grafiği" width="500" height="300">
 
+#### Kod:
+```python
+print(b)
+```
+#### Çıktı:
+```plaintext
+tensor([ 0.0000e+00,  2.5882e-01,  5.0000e-01,  7.0711e-01,  8.6603e-01,
+         9.6593e-01,  1.0000e+00,  9.6593e-01,  8.6603e-01,  7.0711e-01,
+         5.0000e-01,  2.5882e-01, -8.7423e-08, -2.5882e-01, -5.0000e-01,
+        -7.0711e-01, -8.6603e-01, -9.6593e-01, -1.0000e+00, -9.6593e-01,
+        -8.6603e-01, -7.0711e-01, -5.0000e-01, -2.5882e-01,  1.7485e-07],
+       grad_fn=<SinBackward0>)
+```
+Bu `grad_fn` bize geri yayılım adımını yürüttüğümüzde ve gradyanları hesapladığımızda, bu tensörün tüm girdileri için $sin(x)$'in türevini hesaplamamız gerekeceğine dair bir ipucu verir.
 
+#### Kod:
+```python
+c = 2 * b
+print(c)
 
+d = c + 1
+print(d)
+```
+#### Çıktı:
+```plaintext
+tensor([ 0.0000e+00,  5.1764e-01,  1.0000e+00,  1.4142e+00,  1.7321e+00,
+         1.9319e+00,  2.0000e+00,  1.9319e+00,  1.7321e+00,  1.4142e+00,
+         1.0000e+00,  5.1764e-01, -1.7485e-07, -5.1764e-01, -1.0000e+00,
+        -1.4142e+00, -1.7321e+00, -1.9319e+00, -2.0000e+00, -1.9319e+00,
+        -1.7321e+00, -1.4142e+00, -1.0000e+00, -5.1764e-01,  3.4969e-07],
+       grad_fn=<MulBackward0>)
+tensor([ 1.0000e+00,  1.5176e+00,  2.0000e+00,  2.4142e+00,  2.7321e+00,
+         2.9319e+00,  3.0000e+00,  2.9319e+00,  2.7321e+00,  2.4142e+00,
+         2.0000e+00,  1.5176e+00,  1.0000e+00,  4.8236e-01, -3.5763e-07,
+        -4.1421e-01, -7.3205e-01, -9.3185e-01, -1.0000e+00, -9.3185e-01,
+        -7.3205e-01, -4.1421e-01,  4.7684e-07,  4.8236e-01,  1.0000e+00],
+       grad_fn=<AddBackward0>)
+```
+Son olarak, tek elemanlı bir çıktı hesaplayalım. `.backward()`'ı argümanı olmayan bir tensörde çağırdığınızda, çağrı yapan tensörün yalnızca tek bir eleman içermesini bekler, tıpkı bir kayıp fonksiyonunu hesaplarken olduğu gibi.
+#### Kod:
+```python
+out = d.sum()
+print(out)
+```
+#### Çıktı:
+```plaintext
+tensor(25., grad_fn=<SumBackward0>)
+```
+`rad_fn` özelliği, bir tensörün hangi işlemle oluşturulduğunu takip eden bir referanstır. PyTorch'ta otomatik türev alma (autograd) mekanizması, hesaplama grafiğini oluşturmak için bu `grad_fn` bilgisini kullanır.
+
+Burada belirtilen `next_functions` özelliği, tensörün hangi işlemlerden türediğini gösterir. Yani bir tensörün `grad_fn.next_functions` listesini incelersen, o tensörün hangi önceki tensörlerden üretildiğini görebilirsin.  
+
+#### Kod:
+```python
+print(d.grad_fn)
+```
+#### Çıktı:
+```plaintext
+<AddBackward0 object at 0x7fa00048dfd0>
+```
+`d.grad_fn` bize d tensörünün toplama işlemi (AddBackward0) sonucu oluştuğunu gösterir.
+
+#### Kod:
+```python
+print(d.grad_fn.next_functions)
+```
+#### Çıktı:
+```plaintext
+((<MulBackward0 object at 0x7fa00048d3a0>, 0), (None, 0))
+```
+`d.grad_fn.next_functions`, d'nin hangi tensörlerden üretildiğini gösterir. Burada, c tensörünün (MulBackward0) çarpma işleminden türediğini görebiliriz.
+
+#### Kod:
+```python
+print(d.grad_fn.next_functions[0][0].next_functions)
+```
+#### Çıktı:
+```plaintext
+((<SinBackward object at 0x7fa00048dfd0>, 0), (None, 0))
+```
+`d.grad_fn.next_functions[0][0].next_functions` d'nin üretildiği tensörün üretildiği tensörü gösterir. Burada, b tensörünün (SinBackward) sin(a) işleminden türediğini görebiliriz. 
+
+#### Kod:
+```python
+print(d.grad_fn.next_functions[0][0].next_functions[0][0].next_functions)
+```
+#### Çıktı:
+```plaintext
+((<AccumulateGrad object at 0x7fa00048d280>, 0),)
+```
+`d.grad_fn.next_functions[0][0].next_functions[0][0].next_functions` d'nin üretildiği tensörün üretildiği tensörün üretildiği tensörü gösterir. Burada, a tensörünün `a = torch.linspace(0, 2 * math.pi, steps=25, requires_grad=True)` şeklinde türediğini görebiliriz. 
 
 
