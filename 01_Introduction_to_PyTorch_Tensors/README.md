@@ -37,21 +37,23 @@ print(x)
 ```python
 zeros = torch.zeros(2, 3)
 print(zeros)
-
+```
+    tensor([[0., 0., 0.],
+            [0., 0., 0.]])
+```python
 ones = torch.ones(2, 3)
 print(ones)
-
+```
+    tensor([[1., 1., 1.],
+            [1., 1., 1.]])
+```python
 torch.manual_seed(1729)
 random = torch.rand(2, 3)
 print(random)
 ```
-
-    tensor([[0., 0., 0.],
-            [0., 0., 0.]])
-    tensor([[1., 1., 1.],
-            [1., 1., 1.]])
     tensor([[0.3126, 0.3791, 0.3087],
             [0.0736, 0.4216, 0.0691]])
+
 
 
 ### Random Tensors and Seeding (Tohumlama)
@@ -65,24 +67,29 @@ Bu durumda, rastgele sayı üreticisinin seed (tohum) değerini manuel olarak ay
 torch.manual_seed(1729)
 random1 = torch.rand(2, 3)
 print(random1)
+```
+    tensor([[0.3126, 0.3791, 0.3087],
+            [0.0736, 0.4216, 0.0691]])
 
+```python
 random2 = torch.rand(2, 3)
 print(random2)
-
+```
+    tensor([[0.2332, 0.4047, 0.2162],
+            [0.9927, 0.4128, 0.5938]])
+            
+```python
 torch.manual_seed(1729)
 random3 = torch.rand(2, 3)
 print(random3)
-
+```
+    tensor([[0.3126, 0.3791, 0.3087],
+            [0.0736, 0.4216, 0.0691]])
+            
+```python
 random4 = torch.rand(2, 3)
 print(random4)
 ```
-
-    tensor([[0.3126, 0.3791, 0.3087],
-            [0.0736, 0.4216, 0.0691]])
-    tensor([[0.2332, 0.4047, 0.2162],
-            [0.9927, 0.4128, 0.5938]])
-    tensor([[0.3126, 0.3791, 0.3087],
-            [0.0736, 0.4216, 0.0691]])
     tensor([[0.2332, 0.4047, 0.2162],
             [0.9927, 0.4128, 0.5938]])
 
@@ -92,7 +99,7 @@ Bunun nedeni, rastgele sayı üreteci (RNG) için seed (tohum) değerini manuel 
 
 Bu, özellikle tekrar üretilebilir araştırmalar yapmak veya model eğitimlerini karşılaştırmak için önemlidir.
 
-### Tensor Shapes
+### Tensor Shapes (Tensör Şekli)
 Genellikle iki veya daha fazla tensör üzerinde işlem yaparken, bunların aynı *shape* sahip olmaları gerekir.Bu durumda, PyTorch’un `torch.*_like()` yöntemlerini kullanabiliriz. Bu yöntemler, mevcut tensörleri baz alarak yeni tensörler oluşturmanın kolay bir yoludur.
 
 
@@ -100,48 +107,50 @@ Genellikle iki veya daha fazla tensör üzerinde işlem yaparken, bunların ayn�
 x = torch.empty(2, 2, 3)
 print(x.shape)
 print(x)
-
-empty_like_x = torch.empty_like(x)
-print(empty_like_x.shape)
-print(empty_like_x)
-
-zeros_like_x = torch.zeros_like(x)
-print(zeros_like_x.shape)
-print(zeros_like_x)
-
-ones_like_x = torch.ones_like(x)
-print(ones_like_x.shape)
-print(ones_like_x)
-
-rand_like_x = torch.rand_like(x)
-print(rand_like_x.shape)
-print(rand_like_x)
 ```
-
     torch.Size([2, 2, 3])
     tensor([[[-3.7485e+08,  4.4488e-41, -3.7485e+08],
              [ 4.4488e-41,  4.4842e-44,  0.0000e+00]],
     
             [[ 1.5695e-43,  0.0000e+00,  1.9011e-13],
              [ 3.1734e-41,  0.0000e+00,  1.4013e-45]]])
+```python
+empty_like_x = torch.empty_like(x)
+print(empty_like_x.shape)
+print(empty_like_x)
+```
     torch.Size([2, 2, 3])
     tensor([[[ 1.8914e-13,  3.1734e-41,  0.0000e+00],
              [ 1.4013e-45,  0.0000e+00,  3.1730e-41]],
     
             [[ 1.5835e-43,  0.0000e+00, -1.3501e-11],
              [ 3.1730e-41, -1.3540e-11,  3.1730e-41]]])
-    torch.Size([2, 2, 3])
+```python
+zeros_like_x = torch.zeros_like(x)
+print(zeros_like_x.shape)
+print(zeros_like_x)
+```
     tensor([[[0., 0., 0.],
              [0., 0., 0.]],
     
             [[0., 0., 0.],
              [0., 0., 0.]]])
+```python
+ones_like_x = torch.ones_like(x)
+print(ones_like_x.shape)
+print(ones_like_x)
+```
     torch.Size([2, 2, 3])
     tensor([[[1., 1., 1.],
              [1., 1., 1.]],
     
             [[1., 1., 1.],
              [1., 1., 1.]]])
+```python
+rand_like_x = torch.rand_like(x)
+print(rand_like_x.shape)
+print(rand_like_x)
+```
     torch.Size([2, 2, 3])
     tensor([[[0.6128, 0.1519, 0.0453],
              [0.5035, 0.9978, 0.3884]],
@@ -180,7 +189,7 @@ Eğer veriniz zaten bir Python listesi veya tuple biçimindeyse, `torch.tensor()
 
 *Note: `torch.tensor()` fonksiyonu verinin bir kopyasını oluşturur.*
 
-## Tensor Data Types
+## Tensor Data Types (Tensör Veri Türleri)
 Bir tensörün temel veri türünü ayarlamanın en basit yolu, oluşturma sırasında isteğe bağlı bir argüman kullanmaktır.
 
 * dtype=torch.int16 ayarlayarak a tensörünü oluşturduk:
@@ -190,18 +199,21 @@ Bir tensörün temel veri türünü ayarlamanın en basit yolu, oluşturma sıra
 ```python
 a = torch.ones((2, 3), dtype=torch.int16)
 print(a)
-
+```
+    tensor([[1, 1, 1],
+            [1, 1, 1]], dtype=torch.int16)
+            
+```python
 b = torch.rand((2, 3), dtype=torch.float64) * 20.
 print(b)
-
+```
+    tensor([[ 0.9956,  1.4148,  5.8364],
+            [11.2406, 11.2083, 11.6692]], dtype=torch.float64)
+            
+```python
 c = b.to(torch.int32)    # float64 → int32 dönüşümü
 print(c)
 ```
-
-    tensor([[1, 1, 1],
-            [1, 1, 1]], dtype=torch.int16)
-    tensor([[ 0.9956,  1.4148,  5.8364],
-            [11.2406, 11.2083, 11.6692]], dtype=torch.float64)
     tensor([[ 0,  1,  5],
             [11, 11, 11]], dtype=torch.int32)
 
@@ -226,26 +238,36 @@ PyTorch’ta Kullanılabilir Veri Tipleri
 
 ```python
 ones = torch.zeros(2, 2) + 1  # 0 matrisi + 1 → Tüm elemanlar 1 olur
-twos = torch.ones(2, 2) * 2   # 1 matrisi * 2 → Tüm elemanlar 2 olur
-threes = (torch.ones(2, 2) * 7 - 1) / 2  # (7 matrisi - 1) / 2 → Tüm elemanlar 3 olur
-fours = twos ** 2  # 2 ** 2 → Tüm elemanlar 4 olur
-sqrt2s = twos ** 0.5  # 2 ** 0.5 → Tüm elemanlar √2 olur
-
 print(ones)
-print(twos)
-print(threes)
-print(fours)
-print(sqrt2s)
 ```
-
     tensor([[1., 1.],
             [1., 1.]])
+            
+```python
+twos = torch.ones(2, 2) * 2   # 1 matrisi * 2 → Tüm elemanlar 2 olur
+print(twos)
+```
     tensor([[2., 2.],
             [2., 2.]])
+            
+```python
+threes = (torch.ones(2, 2) * 7 - 1) / 2  # (7 matrisi - 1) / 2 → Tüm elemanlar 3 olur
+print(threes)
+```
     tensor([[3., 3.],
             [3., 3.]])
+            
+```python
+fours = twos ** 2  # 2 ** 2 → Tüm elemanlar 4 olur
+print(fours)
+```
     tensor([[4., 4.],
             [4., 4.]])
+            
+```python
+sqrt2s = twos ** 0.5  # 2 ** 0.5 → Tüm elemanlar √2 olur
+print(sqrt2s)
+```
     tensor([[1.4142, 1.4142],
             [1.4142, 1.4142]])
 
@@ -335,14 +357,7 @@ a =     torch.ones(4, 3, 2)
 
 b = a * torch.rand(   3, 2) #  (4,3,2) ile (3,2) → 1. boyut eksik, genişletilir
 print(b)
-
-c = a * torch.rand(   3, 1) # 4,3,2) ile (3,1) → 3. boyut 1, genişletilir
-print(c)
-
-d = a * torch.rand(   1, 2) # (4,3,2) ile (1,2) → 2. boyut 1, genişletilir
-print(d)
 ```
-
     tensor([[[0.2138, 0.5395],
              [0.3686, 0.4007],
              [0.7220, 0.8217]],
@@ -358,6 +373,11 @@ print(d)
             [[0.2138, 0.5395],
              [0.3686, 0.4007],
              [0.7220, 0.8217]]])
+             
+```python
+c = a * torch.rand(   3, 1) # 4,3,2) ile (3,1) → 3. boyut 1, genişletilir
+print(c)
+```
     tensor([[[0.2612, 0.2612],
              [0.7375, 0.7375],
              [0.8328, 0.8328]],
@@ -373,6 +393,11 @@ print(d)
             [[0.2612, 0.2612],
              [0.7375, 0.7375],
              [0.8328, 0.8328]]])
+             
+```python
+d = a * torch.rand(   1, 2) # (4,3,2) ile (1,2) → 2. boyut 1, genişletilir
+print(d)
+```
     tensor([[[0.8444, 0.2941],
              [0.8444, 0.2941],
              [0.8444, 0.2941]],
@@ -388,6 +413,7 @@ print(d)
             [[0.8444, 0.2941],
              [0.8444, 0.2941],
              [0.8444, 0.2941]]])
+
 
 
 Tensörlerin her birinin değerlerine yakından bakın:
@@ -434,58 +460,14 @@ PyTorch tensörler üzerinde 300'den fazla işlem yapabilir.
 
 
 ```python
-
+# Yaygın fonksiyonlar
 a = torch.rand(2, 4) * 2 - 1    # [-1, 1] aralığında rastgele tensör
-print('Common functions:')
+print('Yaygın fonksiyonlar:')
 print(torch.abs(a))    # Mutlak değer
 print(torch.ceil(a))   # Yukarı yuvarlama
 print(torch.floor(a))  # Aşağı yuvarlama
 print(torch.clamp(a, -0.5, 0.5))    # Belirli aralığa sıkıştırma
-
-# Trigonometrik fonksiyonlar ve ters trigonometrik fonksiyonlar
-angles = torch.tensor([0, math.pi / 4, math.pi / 2, 3 * math.pi / 4])
-sines = torch.sin(angles)
-inverses = torch.asin(sines)
-print('\nSine and arcsine:')
-print(angles)
-print(sines)
-print(inverses)
-
-# bitwise işlemleri
-print('\nBitwise XOR:')
-b = torch.tensor([1, 5, 11])
-c = torch.tensor([2, 7, 10])
-print(torch.bitwise_xor(b, c))    # Bit düzeyinde XOR işlemi
-
-# karşılatırmalar
-print('\nBroadcasted, element-wise equality comparison:')
-d = torch.tensor([[1., 2.], [3., 4.]])
-e = torch.ones(1, 2)  # (1,2) boyutundaki tensör, (2,2) boyutuna genişletilecek (broadcasting)!
-print(torch.eq(d, e)) #  Eleman bazında karşılaştırma yapar
-
-
-print('\nReduction ops:')
-print(torch.max(d))        # Maksimum değeri döndürür
-print(torch.max(d).item()) # Tek değerli tensörden sayıyı çeker
-print(torch.mean(d))       # ortalama
-print(torch.std(d))        # standard sapma
-print(torch.prod(d))       # sayıların çarpımı
-print(torch.unique(torch.tensor([1, 2, 1, 2, 1, 2]))) # Benzersiz elemanları döndürür
-
-# vektör and lineer cebir işlemleri
-v1 = torch.tensor([1., 0., 0.])         # x birim vektör
-v2 = torch.tensor([0., 1., 0.])        # x birim vektör
-m1 = torch.rand(2, 2)                   # random matrix
-m2 = torch.tensor([[3., 0.], [0., 3.]]) # 3 katlı birim matris
-
-print('\nVectors & Matrices:')
-print(torch.cross(v2, v1)) # # Çapraz çarpım (cross product) (v1 x v2 == -v2 x v1)
-print(m1)
-m3 = torch.matmul(m1, m2)  # Matris çarpımı
-print(m3)                
-print(torch.svd(m3))       #(Tekil değer ayrışımı)
 ```
-
     Yaygın fonksiyonlar:
     tensor([[0.8447, 0.1992, 0.9755, 0.9295],
             [0.8190, 0.1029, 0.7480, 0.4949]])
@@ -495,45 +477,60 @@ print(torch.svd(m3))       #(Tekil değer ayrışımı)
             [-1., -1.,  0., -1.]])
     tensor([[-0.5000, -0.1992,  0.5000, -0.5000],
             [-0.5000, -0.1029,  0.5000, -0.4949]])
-    
+            
+```python
+# Trigonometrik fonksiyonlar ve ters trigonometrik fonksiyonlar
+angles = torch.tensor([0, math.pi / 4, math.pi / 2, 3 * math.pi / 4])
+sines = torch.sin(angles)
+inverses = torch.asin(sines)
+print('\nSine and arcsine:')
+print(angles)
+print(sines)
+print(inverses)
+```
     Sine and arcsine:
     tensor([0.0000, 0.7854, 1.5708, 2.3562])
     tensor([0.0000, 0.7071, 1.0000, 0.7071])
     tensor([0.0000, 0.7854, 1.5708, 0.7854])
-    
+
+```python
+# bitwise işlemleri
+print('\nBitwise XOR:')
+b = torch.tensor([1, 5, 11])
+c = torch.tensor([2, 7, 10])
+print(torch.bitwise_xor(b, c))    # Bit düzeyinde XOR işlemi
+```
     Bitwise XOR:
     tensor([3, 2, 1])
-    
-   
+
+```python
+# karşılatırmalar
+print('\nBroadcasted, element-wise equality comparison:')
+d = torch.tensor([[1., 2.], [3., 4.]])
+e = torch.ones(1, 2)  # (1,2) boyutundaki tensör, (2,2) boyutuna genişletilecek (broadcasting)!
+print(torch.eq(d, e)) #  Eleman bazında karşılaştırma yapar
+```
+    Broadcasted, element-wise equality comparison:
     tensor([[ True, False],
             [False, False]])
-    
-   
+
+```python
+print('\nReduction ops:')
+print(torch.max(d))        # Maksimum değeri döndürür
+print(torch.max(d).item()) # Tek değerli tensörden sayıyı çeker
+print(torch.mean(d))       # ortalama
+print(torch.std(d))        # standart sapma
+print(torch.prod(d))       # sayıların çarpımı
+print(torch.unique(torch.tensor([1, 2, 1, 2, 1, 2]))) # Benzersiz elemanları döndürür
+```
+    Reduction ops:
     tensor(4.)
     4.0
     tensor(2.5000)
     tensor(1.2910)
     tensor(24.)
     tensor([1, 2])
-    
-    Vektörler & Matrisler:
-    tensor([ 0.,  0., -1.])
-    tensor([[0.6923, 0.7545],
-            [0.7746, 0.2330]])
-    tensor([[2.0769, 2.2636],
-            [2.3237, 0.6990]])
-    torch.return_types.svd(
-    U=tensor([[-0.7959, -0.6054],
-            [-0.6054,  0.7959]]),
-    S=tensor([3.7831, 1.0066]),
-    V=tensor([[-0.8088,  0.5881],
-            [-0.5881, -0.8088]]))
 
-
-    <ipython-input-56-723b464fcb2b>:46: UserWarning: Using torch.cross without specifying the dim arg is deprecated.
-    Please either pass the dim explicitly or simply use torch.linalg.cross.
-    The default value of dim will change to agree with that of linalg.cross in a future release. (Triggered internally at ../aten/src/ATen/native/Cross.cpp:62.)
-      print(torch.cross(v2, v1)) # # Çapraz çarpım (cross product) (v1 x v2 == -v2 x v1)
 
 
 ### Tensörleri Yerinde (In-Place) Değiştirme
@@ -550,19 +547,19 @@ print('a:')
 print(a)
 print(torch.sin(a))   # Yeni bir tensör oluşturur
 print(a)              # a değişmez!
-
-b = torch.tensor([0, math.pi / 4, math.pi / 2, 3 * math.pi / 4])
-print('\nb:')
-print(b)
-print(torch.sin_(b))  # ın-place işlemi
-print(b)              # b değişti
 ```
-
     a:
     tensor([0.0000, 0.7854, 1.5708, 2.3562])
     tensor([0.0000, 0.7071, 1.0000, 0.7071])
     tensor([0.0000, 0.7854, 1.5708, 2.3562])
     
+```python
+b = torch.tensor([0, math.pi / 4, math.pi / 2, 3 * math.pi / 4])
+print('\nb:')
+print(b)
+print(torch.sin_(b))  # ın-place işlemi
+print(b)              # b değişti
+``` 
     b:
     tensor([0.0000, 0.7854, 1.5708, 2.3562])
     tensor([0.0000, 0.7071, 1.0000, 0.7071])
@@ -575,25 +572,25 @@ Aritmetik İşlemler İçin Benzer Davranış Gösteren Fonksiyonlar:
 ```python
 a = torch.ones(2, 2)
 b = torch.rand(2, 2)
-
-print('Before:')
-print(a)
-print(b)
-print('\nAfter adding:')
-print(a.add_(b))
-print(a)
-print(b)
-print('\nAfter multiplying')
-print(b.mul_(b))
-print(b)
 ```
 
-   
+```python
+print('Önce:')
+print(a)
+print(b)
+```
+    Önce:
     tensor([[1., 1.],
             [1., 1.]])
     tensor([[0.8441, 0.9004],
             [0.3995, 0.6324]])
-    
+            
+```python
+print('\nToplamadan sonra:')
+print(a.add_(b))
+print(a)
+print(b)
+```
     Toplamadan sonra:
     tensor([[1.8441, 1.9004],
             [1.3995, 1.6324]])
@@ -601,7 +598,12 @@ print(b)
             [1.3995, 1.6324]])
     tensor([[0.8441, 0.9004],
             [0.3995, 0.6324]])
-    
+
+```python
+print('\nÇarpmadan Sonra')
+print(b.mul_(b))
+print(b)
+```  
     Çarpmadan Sonra:
     tensor([[0.7125, 0.8107],
             [0.1596, 0.3999]])
@@ -623,11 +625,19 @@ a = torch.rand(2, 2)
 b = torch.rand(2, 2)
 c = torch.zeros(2, 2)
 old_id = id(c)
-
 print(c)
+```
+    tensor([[0., 0.],
+            [0., 0.]])
+            
+```python
 d = torch.matmul(a, b, out=c)
 print(c)                # c'nin içeriği değişti!
+```
+    tensor([[0.6202, 0.3974],
+            [0.4075, 0.6706]])
 
+```python
 assert c is d           
 assert id(c), old_id    
 
@@ -635,11 +645,6 @@ torch.rand(2, 2, out=c)
 print(c)                # c değişti
 assert id(c), old_id    # Bellek adresi hala aynı!
 ```
-
-    tensor([[0., 0.],
-            [0., 0.]])
-    tensor([[0.6202, 0.3974],
-            [0.4075, 0.6706]])
     tensor([[0.4491, 0.6265],
             [0.9411, 0.4922]])
 
@@ -692,22 +697,27 @@ Bu, modelinizin `forward()` geçişinde bir tensörün hem kendisinin hem de klo
 ```python
 a = torch.rand(2, 2, requires_grad=True) # turn on autograd
 print(a)
-
-b = a.clone()     # clone() edilen tensörde de requires_grad=True olur!
-print(b)
-
-c = a.detach().clone()    # a'nın türev takibini kaldır ve sonra kopyala
-print(c)
-
-print(a)
 ```
-
     tensor([[0.5461, 0.5396],
             [0.3053, 0.1973]], requires_grad=True)
+
+```python
+b = a.clone()     # clone() edilen tensörde de requires_grad=True olur!
+print(b)
+```
     tensor([[0.5461, 0.5396],
             [0.3053, 0.1973]], grad_fn=<CloneBackward0>)
+            
+```python
+c = a.detach().clone()    # a'nın türev takibini kaldır ve sonra kopyala
+print(c)
+```
     tensor([[0.5461, 0.5396],
             [0.3053, 0.1973]])
+            
+```python
+print(a)
+```
     tensor([[0.5461, 0.5396],
             [0.3053, 0.1973]], requires_grad=True)
 
@@ -853,27 +863,32 @@ print(c)
 a = torch.rand(1, 20)
 print(a.shape)
 print(a)
-
-b = a.squeeze(0)    # non-batched
-print(b.shape)
-print(b)
-
-c = torch.rand(2, 2)
-print(c.shape)
-
-d = c.squeeze(0)
-print(d.shape)
 ```
-
     torch.Size([1, 20])
     tensor([[0.1895, 0.9874, 0.7688, 0.6143, 0.8682, 0.0899, 0.4232, 0.5541, 0.1231,
              0.6651, 0.7216, 0.8821, 0.9117, 0.7213, 0.9232, 0.9339, 0.5014, 0.8377,
              0.3018, 0.3514]])
+             
+```python
+b = a.squeeze(0)    # non-batched
+print(b.shape)
+print(b)
+```
     torch.Size([20])
     tensor([0.1895, 0.9874, 0.7688, 0.6143, 0.8682, 0.0899, 0.4232, 0.5541, 0.1231,
             0.6651, 0.7216, 0.8821, 0.9117, 0.7213, 0.9232, 0.9339, 0.5014, 0.8377,
             0.3018, 0.3514])
+            
+```python
+c = torch.rand(2, 2)
+print(c.shape)
+```
     torch.Size([2, 2])
+    
+```python
+d = c.squeeze(0)
+print(d.shape)
+```
     torch.Size([2, 2])
 
 
@@ -923,12 +938,13 @@ print(a * c)
 ```python
 batch_me = torch.rand(3, 226, 226)
 print(batch_me.shape)
-
+```
+    torch.Size([3, 226, 226])
+    
+```python
 batch_me.unsqueeze_(0)    # 0. boyuta yeni bir batch ekseni ekle
 print(batch_me.shape)
 ```
-
-    torch.Size([3, 226, 226])
     torch.Size([1, 3, 226, 226])
 
 
@@ -976,13 +992,14 @@ import numpy as np
 
 numpy_array = np.ones((2, 3))
 print(numpy_array)
-
+```
+    [[1. 1. 1.]
+     [1. 1. 1.]]
+     
+```python
 pytorch_tensor = torch.from_numpy(numpy_array)   # PyTorch tensörüne çevir
 print(pytorch_tensor)
 ```
-
-    [[1. 1. 1.]
-     [1. 1. 1.]]
     tensor([[1., 1., 1.],
             [1., 1., 1.]], dtype=torch.float64)
 
@@ -996,13 +1013,14 @@ Hatta NumPy’nın varsayılan 64-bit float (float64) veri tipini bile korur.
 ```python
 pytorch_rand = torch.rand(2, 3)
 print(pytorch_rand)
-
+```
+    tensor([[0.1103, 0.3115, 0.2571],
+            [0.9577, 0.3313, 0.4121]])
+            
+```python
 numpy_rand = pytorch_rand.numpy()
 print(numpy_rand)
 ```
-
-    tensor([[0.1103, 0.3115, 0.2571],
-            [0.9577, 0.3313, 0.4121]])
     [[0.11027098 0.3114581  0.25705016]
      [0.957737   0.33131754 0.4120825 ]]
 
