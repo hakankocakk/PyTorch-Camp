@@ -223,4 +223,124 @@ Geçici olarak hesaplanan tensörlerdir ve optimizasyonda güncellenmezler.
 `.grad` saklamazlar (ancak `.retain_grad()` ile saklanabilir).
 
 
+## Autograd in Training
+Autograd'ın nasıl çalıştığına kısaca bir göz attık, ancak model eğitimindeki amacı için kullanıldığında nasıl görünüyor? Küçük bir model tanımlayalım ve tek bir eğitimden sonra nasıl değiştiğini inceleyelim. İlk olarak birkaç sabiti, modelimizi tanımlayalım:  
+Burada modelin nasıl oluşturulduğuna değinmeyeceğiz. Odak noktamız autograd'ın çalışma prensibi olacaktır.  
+#### Kod:
+```python
+BATCH_SIZE = 16
+DIM_IN = 1000
+HIDDEN_SIZE = 100
+DIM_OUT = 10
+
+class TinyModel(torch.nn.Module):
+    def __init__(self):
+        super(TinyModel, self).__init__()
+
+        self.layer1 = torch.nn.Linear(1000, 100)
+        self.relu = torch.nn.ReLU()
+        self.layer2 = torch.nn.Linear(100, 10)
+
+    def forward(self, x):
+        x = self.layer1(x)
+        x = self.relu(x)
+        x = self.layer2(x)
+        return x
+    
+some_input = torch.rand(BATCH_SIZE, DIM_IN, requires_grad=False)
+ideal_output = torch.rand(BATCH_SIZE, DIM_OUT, requires_grad=False)
+
+model = TinyModel()
+```
+2. katmanın ağırlık parametrelerine bakacak olursak:
+#### Kod:
+```python
+print(model.layer2.weight[0][0:10])
+```
+#### Çıktı:
+```plaintext
+tensor([ 0.0988, -0.0047,  0.0284,  0.0106,  0.0369,  0.0968,  0.0858, -0.0609,
+         0.0965,  0.0334], grad_fn=<SliceBackward0>)
+```
+Autograd çalıştırılmadığı için çıktımız `None` olacaktır.
+#### Kod:
+```python
+print(model.layer2.weight.grad)
+```
+#### Çıktı:
+```plaintext
+None
+```
+Bir eğitim grubunu çalıştırdığımızda bunun nasıl değiştiğine bakalım. Bir kayıp fonksiyonu için, `prediction` ile `ideal_output` arasındaki Öklid mesafesinin karesini kullanacağız ve basit bir stokastik gradyan iniş optimizasyonu kullanacağız.
+
+#### Kod:
+```python
+optimizer = torch.optim.SGD(model.parameters(), lr=0.001)
+
+prediction = model(some_input)
+
+loss = (ideal_output - prediction).pow(2).sum()
+print(loss)
+```
+#### Çıktı:
+```plaintext
+tensor(50.1866, grad_fn=<SumBackward0>)
+```
+
+`loss.backward()` ile her öğrenme ağırlığı (learning weight) için gradyanlar (türevlerin) hesaplanmıştır. 
+#### Kod:
+```python
+loss.backward()
+```
+
+#### Kod:
+```python
+print(model.layer2.weight.grad[0][0:10])
+```
+#### Çıktı:
+```plaintext
+tensor([-4.8440, -1.6548, -0.5371, -1.3087,  0.0000, -2.5655, -0.0460, -0.8582,
+        -0.3528, -0.0841])
+```
+
+
+#### Kod:
+```python
+print(model.layer2.weight[0][0:10])
+```
+#### Çıktı:
+```plaintext
+tensor([ 0.0988, -0.0047,  0.0284,  0.0106,  0.0369,  0.0968,  0.0858, -0.0609,
+         0.0965,  0.0334], grad_fn=<SliceBackward0>)
+```
+ Ağırlıklar değişmeden kalır, çünkü henüz optimizasyon işlemini gerçekleştirilmemiştir.
+
+
+#### Kod:
+```python
+optimizer.step()
+```
+`optimizer.step()` ile optimizasyon işlemi gerçekleştirilir.
+
+
+#### Kod:
+```python
+print(model.layer2.weight[0][0:10])
+```
+#### Çıktı:
+```plaintext
+tensor([ 0.1037, -0.0030,  0.0290,  0.0120,  0.0369,  0.0993,  0.0858, -0.0600,
+         0.0969,  0.0335], grad_fn=<SliceBackward0>)
+```
+Optimizasyon işleminin gerçekleştirilmesiyle birlikte ağırlıklar güncellenmiştir.   
+
+`optimizer.step()` çağrıldıktan sonra mutlaka `optimizer.zero_grad()` çağrılmalıdır. Aksi takdirde, her `loss.backward()` çağrıldığında gradyanlar (türevler) birikmeye (accumulate) devam eder. Yani her iterasyonda önceki gradyanlar yeni hesaplananlarla toplanır ve yanlış güncellemeler yapılır.
+
+
+## Autograd'ı Kapatma ve Açma
+
+
+
+
+
 
