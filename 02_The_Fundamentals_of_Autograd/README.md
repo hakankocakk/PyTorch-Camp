@@ -60,7 +60,8 @@ tensor([0.0000, 0.2618, 0.5236, 0.7854, 1.0472, 1.3090, 1.5708, 1.8326, 2.0944,
 #### Kod:
 ```python
 b = torch.sin(a)
-plt.plot(a.detach(), b.detach(), marker='o', linestyle='-')
+plt.plot(a.detach(), b.detach(), label="sin(a)", marker='o', linestyle='-')
+plt.legend()
 plt.xlabel("a (Radyan)")
 plt.ylabel("sin(a)")
 plt.grid()
@@ -188,7 +189,7 @@ tensor([ 2.0000e+00,  1.9319e+00,  1.7321e+00,  1.4142e+00,  1.0000e+00,
 Türevi görselleştirmek istersek:
 #### Kod:
 ```python
-plt.plot(a.detach(), a.grad.detach(), label="d(out)/da = 2*cos(a)")
+plt.plot(a.detach(), a.grad.detach(), label="d(out)/da = 2*cos(a)", marker='o', linestyle='-')
 plt.legend()
 plt.xlabel("a")
 plt.ylabel("Türev (d(out)/da)")
