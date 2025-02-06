@@ -390,17 +390,16 @@ print(d)
              [0.8444, 0.2941]]])
 
 
-Look closely at the values of each tensor above:
-* The multiplication operation that created `b` was broadcast over every "layer" of `a`.
-* For `c`, the operation was broadcast over ever layer and row of `a` - every 3-element column is identical.
-* For `d`, we switched it around - now every *row* is identical, across layers and columns.
+Tensörlerin her birinin değerlerine yakından bakın:
 
-For more information on broadcasting, see the [PyTorch documentation](https://pytorch.org/docs/stable/notes/broadcasting.html) on the topic.
+b'yi oluşturan çarpma işlemi, a'nın her bir "katmanına" yayıldı (broadcast edildi).
+c için, işlem a'nın her katmanı ve satırına yayıldı - her 3 elemanlı sütun aynıdır.
+d için ise durumu tersine çevirdik - şimdi her satır katmanlar ve sütunlar boyunca aynıdır.
+Yayımlama (broadcasting) hakkında daha fazla bilgi için PyTorch belgeleri sayfasını inceleyebilirsiniz.
 
-Here are some examples of attempts at broadcasting that will fail:
+Yayımlama denemelerinin başarısız olacağı bazı örnekler şunlardır:
 
-**Note: The following cell throws a run-time error. This is intentional.**
-
+Not: Aşağıdaki hücre çalışma zamanı hatası verir. Bu kasıtlıdır.
 
 ```python
 # Aşağıdaki uygulamalar başarısız olur ve çalışma zamanı hatası (RuntimeError) verir.
@@ -435,7 +434,7 @@ PyTorch tensörler üzerinde 300'den fazla işlem yapabilir.
 
 
 ```python
-# common functions
+
 a = torch.rand(2, 4) * 2 - 1    # [-1, 1] aralığında rastgele tensör
 print('Common functions:')
 print(torch.abs(a))    # Mutlak değer
@@ -443,7 +442,7 @@ print(torch.ceil(a))   # Yukarı yuvarlama
 print(torch.floor(a))  # Aşağı yuvarlama
 print(torch.clamp(a, -0.5, 0.5))    # Belirli aralığa sıkıştırma
 
-# trigonometric functions and their inverses
+# Trigonometrik fonksiyonlar ve ters trigonometrik fonksiyonlar
 angles = torch.tensor([0, math.pi / 4, math.pi / 2, 3 * math.pi / 4])
 sines = torch.sin(angles)
 inverses = torch.asin(sines)
@@ -452,19 +451,19 @@ print(angles)
 print(sines)
 print(inverses)
 
-# bitwise operations
+# bitwise işlemleri
 print('\nBitwise XOR:')
 b = torch.tensor([1, 5, 11])
 c = torch.tensor([2, 7, 10])
 print(torch.bitwise_xor(b, c))    # Bit düzeyinde XOR işlemi
 
-# comparisons:
+# karşılatırmalar
 print('\nBroadcasted, element-wise equality comparison:')
 d = torch.tensor([[1., 2.], [3., 4.]])
 e = torch.ones(1, 2)  # (1,2) boyutundaki tensör, (2,2) boyutuna genişletilecek (broadcasting)!
 print(torch.eq(d, e)) #  Eleman bazında karşılaştırma yapar
 
-# reductions:
+
 print('\nReduction ops:')
 print(torch.max(d))        # Maksimum değeri döndürür
 print(torch.max(d).item()) # Tek değerli tensörden sayıyı çeker
@@ -473,7 +472,7 @@ print(torch.std(d))        # standard sapma
 print(torch.prod(d))       # sayıların çarpımı
 print(torch.unique(torch.tensor([1, 2, 1, 2, 1, 2]))) # Benzersiz elemanları döndürür
 
-# vector and linear algebra operations
+# vektör and lineer cebir işlemleri
 v1 = torch.tensor([1., 0., 0.])         # x birim vektör
 v2 = torch.tensor([0., 1., 0.])        # x birim vektör
 m1 = torch.rand(2, 2)                   # random matrix
@@ -487,7 +486,7 @@ print(m3)
 print(torch.svd(m3))       #(Tekil değer ayrışımı)
 ```
 
-    Common functions:
+    Yaygın fonksiyonlar:
     tensor([[0.8447, 0.1992, 0.9755, 0.9295],
             [0.8190, 0.1029, 0.7480, 0.4949]])
     tensor([[-0., -0., 1., -0.],
@@ -505,11 +504,11 @@ print(torch.svd(m3))       #(Tekil değer ayrışımı)
     Bitwise XOR:
     tensor([3, 2, 1])
     
-    Broadcasted, element-wise equality comparison:
+   
     tensor([[ True, False],
             [False, False]])
     
-    Reduction ops:
+   
     tensor(4.)
     4.0
     tensor(2.5000)
@@ -517,7 +516,7 @@ print(torch.svd(m3))       #(Tekil değer ayrışımı)
     tensor(24.)
     tensor([1, 2])
     
-    Vectors & Matrices:
+    Vektörler & Matrisler:
     tensor([ 0.,  0., -1.])
     tensor([[0.6923, 0.7545],
             [0.7746, 0.2330]])
@@ -589,13 +588,13 @@ print(b.mul_(b))
 print(b)
 ```
 
-    Before:
+   
     tensor([[1., 1.],
             [1., 1.]])
     tensor([[0.8441, 0.9004],
             [0.3995, 0.6324]])
     
-    After adding:
+    Toplamadan sonra:
     tensor([[1.8441, 1.9004],
             [1.3995, 1.6324]])
     tensor([[1.8441, 1.9004],
@@ -603,7 +602,7 @@ print(b)
     tensor([[0.8441, 0.9004],
             [0.3995, 0.6324]])
     
-    After multiplying
+    Çarpmadan Sonra:
     tensor([[0.7125, 0.8107],
             [0.1596, 0.3999]])
     tensor([[0.7125, 0.8107],
