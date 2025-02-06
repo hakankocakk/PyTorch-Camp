@@ -60,7 +60,8 @@ tensor([0.0000, 0.2618, 0.5236, 0.7854, 1.0472, 1.3090, 1.5708, 1.8326, 2.0944,
 #### Kod:
 ```python
 b = torch.sin(a)
-plt.plot(a.detach(), b.detach(), marker='o', linestyle='-')
+plt.plot(a.detach(), b.detach(), label="sin(a)", marker='o', linestyle='-')
+plt.legend()
 plt.xlabel("a (Radyan)")
 plt.ylabel("sin(a)")
 plt.grid()
@@ -160,5 +161,66 @@ print(d.grad_fn.next_functions[0][0].next_functions[0][0].next_functions)
 ((<AccumulateGrad object at 0x7fa00048d280>, 0),)
 ```
 `d.grad_fn.next_functions[0][0].next_functions[0][0].next_functions` d'nin üretildiği tensörün üretildiği tensörün üretildiği tensörü gösterir. Burada, a tensörünün `a = torch.linspace(0, 2 * math.pi, steps=25, requires_grad=True)` şeklinde türediğini görebiliriz. 
+
+###### Tüm bu mekanizmalar hazır olduğunda, türevleri nasıl elde ederiz?  
+Çıktı üzerinde `backward()` yöntemini çağırırsak ve türevleri incelemek için girişin grad özelliğini kontrol edersiniz.
+
+Bu işlemler sonrası `out.backward()` çağrıldığında `a.grad` tensörü hesaplanır.
+
+Hatırlarsak, `d` şu şekildeydi:
+$d = 2 \sin(a) + 1$
+Bu fonksiyonun `a`'ya göre türevi $\frac{d(d)}{da} = 2 \cos(a)$ şeklindedir.  
+Ancak `out = d.sum()` olduğu için zincir kuralı gereği tüm elemanların türevleri toplanır ve `a.grad` $\frac{d(out)}{d(a)} = 2 \cos(a)$ şeklinde hesaplanır.
+
+#### Kod:
+```python
+out.backward()
+print(a.grad)
+```
+#### Çıktı:
+```plaintext
+tensor([ 2.0000e+00,  1.9319e+00,  1.7321e+00,  1.4142e+00,  1.0000e+00,
+         5.1764e-01, -8.7423e-08, -5.1764e-01, -1.0000e+00, -1.4142e+00,
+        -1.7321e+00, -1.9319e+00, -2.0000e+00, -1.9319e+00, -1.7321e+00,
+        -1.4142e+00, -1.0000e+00, -5.1764e-01,  2.3850e-08,  5.1764e-01,
+         1.0000e+00,  1.4142e+00,  1.7321e+00,  1.9319e+00,  2.0000e+00])
+```
+
+Türevi görselleştirmek istersek:
+#### Kod:
+```python
+plt.plot(a.detach(), a.grad.detach(), label="d(out)/da = 2*cos(a)", marker='o', linestyle='-')
+plt.legend()
+plt.xlabel("a")
+plt.ylabel("Türev (d(out)/da)")
+plt.grid()
+plt.show()
+```
+#### Çıktı:
+<img src="assets/images/2cos(a)_graph.png" alt="Sinüs Grafiği" width="500" height="300">
+
+Buraya ulaşmak için attığımız hesaplama adımlarını hatırlayalım:
+
+```
+a = torch.linspace(0., 2. * math.pi, steps=25, requires_grad=True)
+b = torch.sin(a)
+c = 2 * b
+d = c + 1
+out = d.sum()
+```
+
+`d`yi hesaplamak için yaptığımız gibi bir sabit eklemek türevi değiştirmez. Bu da $c = 2 * b = 2 * sin(a)$ bırakır, bunun türevi $2 * cos(a)$ olmalıdır. Yukarıdaki grafiğe baktığımızda, gördüğümüz şey tam olarak budur.
+
+Hesaplamanın yalnızca *yaprak düğümlerinin* gradyanlarının hesaplandığını unutmayın. Örneğin, `print(c.grad)` denerseniz `None` sonucunu alırsınız. Bu basit örnekte, yalnızca girdi bir yaprak düğümdür, bu nedenle yalnızca onun gradyanları hesaplanır.
+
+###### Yaprak Düğüm (Leaf Node) Nedir?
+Direkt olarak tanımlanan ve `requires_grad=True` olarak ayarlanan tensörlerdir.
+Optimizasyon sırasında güncellenen parametrelerdir (örneğin, model ağırlıkları).
+`grad` özelliği bu tensörler için tutulur.
+###### Ara Düğüm (Intermediate Node) Nedir?
+Başka tensörlerden türetilen tensörlerdir.
+Geçici olarak hesaplanan tensörlerdir ve optimizasyonda güncellenmezler.
+`.grad` saklamazlar (ancak `.retain_grad()` ile saklanabilir).
+
 
 
