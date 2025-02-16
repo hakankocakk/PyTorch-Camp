@@ -216,6 +216,7 @@ Yukarıdaki kod ile LeNet-5 modelinin bir varyantını tanımlanır.
 
 `optim.SGD():` stokastik gradyan iniş (SGD) optimizasyon algoritmasını tanımlar.
 
+
 Şimdi, tek bir epoch boyunca eğitim yapalım ve her 1000 batch'te bir eğitim seti ile validation seti kayıplarını değerlendirelim:
 
 
@@ -264,10 +265,6 @@ writer.flush()
 <img width="526" alt="trainvsvalid" src="https://github.com/user-attachments/assets/7df7b490-42c2-4d3a-9d04-0d4e02178473" />
 
 
-Daha önce açtığımız TensorBoardda ve SCALARS sekmesine bir göz attığımızda;????
-
-
-
 
 
 
@@ -291,7 +288,7 @@ TensorBoard'a geçtiğinizde, bir GRAPHS sekmesi görmelisiniz. Modeliniz içind
 <img width="318" alt="graphs" src="https://github.com/user-attachments/assets/8bd67aa9-8e0c-4fd6-a60f-6204bb682d74" />
 
 
-Kullandığımız 28x28 boyutundaki görsel kareler, 784 boyutlu vektörler olarak modellenebilir (28 * 28 = 784). Bu vektörleri daha düşük boyutlu bir temsile yansıtmak öğretici olabilir. add_embedding() yöntemi, bir veri kümesini en yüksek varyansa sahip üç boyuta yansıtır ve bunları etkileşimli bir 3B grafik olarak gösterir. add_embedding() yöntemi, bunu otomatik olarak en yüksek varyansa sahip üç boyuta yansıtarak gerçekleştirir.
+
 
 Aşağıda, verilerimizden bir örnek alacağız ve böyle bir gömme (embedding) oluşturacağız:
 ```python 
@@ -316,6 +313,7 @@ writer.add_embedding(features,
 writer.flush()
 writer.close()
 ```
+`add_embedding(): ` Kullandığımız 28x28 boyutundaki görsel kareler, 784 boyutlu vektörler olarak modellenebilir (28 * 28 = 784). Bu vektörleri daha düşük boyutlu bir temsile yansıtmak öğretici olabilir. add_embedding() yöntemi, bir veri kümesini en yüksek varyansa sahip üç boyuta yansıtır ve bunları etkileşimli bir 3B grafik olarak gösterir. add_embedding() yöntemi, bunu otomatik olarak en yüksek varyansa sahip üç boyuta yansıtarak gerçekleştirir.
 
 
 Şimdi, TensorBoard'a geçip PROJECTOR sekmesini seçerseniz, projeksiyonun 3B temsilini görmelisiniz. Modeli döndürebilir ve yakınlaştırabilirsiniz.
